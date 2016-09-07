@@ -4,7 +4,8 @@ import {
     AUTH_USER,
     UNAUTH_USER,
     AUTH_ERROR,
-    FETCH_MESSAGE
+    REQUEST_MESSAGE,
+    RECEIVE_MESSAGE
 } from './types';
 
 const ROOT_URL = 'http://localhost:3090';
@@ -68,6 +69,11 @@ export function authError(error) {
 // Example Authentication API request
 export function fetchMessage() {
     return function(dispatch) {
+        dispatch({
+            type: REQUEST_MESSAGE
+        });
+
+
         axios.get(`${ROOT_URL}`,{
             headers: {
                 authorization: localStorage.getItem('token')
@@ -75,9 +81,15 @@ export function fetchMessage() {
         })
             .then(response => {
                 dispatch({
-                    type: FETCH_MESSAGE,
+                    type: RECEIVE_MESSAGE,
                     payload: response.data.message
                 })
             }) 
+            .catch(error => {
+                // If there's an Auth error
+                // then signout and ask for
+                // re-authentication
+                signoutUser();                              
+            })
     }
 }

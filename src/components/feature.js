@@ -7,15 +7,26 @@ class Feature extends Component {
         this.props.fetchMessage();
     }
     render() {
-        return (
-            <div>{this.props.message}</div>
-        );
+        if (this.props.isFetching) {
+            return (
+                <img src="/images/ajax.gif" alt="Loading spinner" />
+            );  
+        } else {
+            return (
+                <p>{this.props.message}</p>
+            );
+            
+        }
+        
     }
 }
 
 
 function mapStateToProps(state) {
-    return { message: state.auth.message };
+    return { 
+        message: state.protected.message,
+        isFetching: state.protected.isFetching 
+    };
 }
 
 export default connect(mapStateToProps, actions)(Feature);

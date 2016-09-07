@@ -3,13 +3,21 @@ import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import * as actions from '../../actions';
 import CustomInput from '../forms/custom-input';
-
+import Alert from '../alert';
 
 
 class Signup extends Component {
     
-    handleFormSubmit() {
-        console.log("Form submitted");
+    handleFormSubmit(formProps) {
+        this.props.signupUser(formProps);
+    }
+
+    renderAlert() {
+        if (this.props.errorMessage) {
+            return (
+                <Alert message={this.props.errorMessage} />
+            );
+        }
     }
 
     render() {
@@ -17,6 +25,7 @@ class Signup extends Component {
         
         return (
             <div>
+                {this.renderAlert()}   
                 <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
                     <Field name="email" type="email" component={CustomInput} label="Email"/>
                     <Field name="password" type="password" component={CustomInput} label="Password"/>
@@ -56,10 +65,14 @@ function validate(formProps) {
     return errors;
 }
 
+function mapStateToProps(state) {
+    return { errorMessage: state.auth.error };
+}
+
 
 Signup = reduxForm({
     form: 'signup',
     validate
 })(Signup);
 
-export default connect(null, actions)(Signup);
+export default connect(mapStateToProps, actions)(Signup);

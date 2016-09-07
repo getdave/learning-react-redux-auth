@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Field, reduxForm } from 'redux-form';
 import * as actions from '../../actions';
+import Alert from '../alert';
 
 class Signin extends Component {
 
@@ -12,9 +13,7 @@ class Signin extends Component {
     renderAlert() {
         if (this.props.errorMessage) {
             return (
-                <div className="alert alert-danger">
-                    <strong>Opps!</strong> {this.props.errorMessage}
-                </div>
+                <Alert message={this.props.errorMessage} />
             );
         }
     }
